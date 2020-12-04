@@ -1,0 +1,19 @@
+Package: clusterpval
+Type: Package
+Title: Clusterpval: P-Values for Differences in Means after Clustering
+Version: 1.0.0
+Authors@R:
+    person("Lucy", "Gao", email = "lucy.gao@uwaterloo.ca", role = c("aut", "cre"))
+Description: Clusters observations, then tests whether there  
+    is a statistically significant difference between the cluster means, using the 
+    methods described in the preprint "Selective inference for hierarchical clustering". See the package website at http://lucylgao.com/clusterpval for more information and more examples. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Suggests: 
+    graphics
+Imports: 
+    fastcluster,
+    stats,
+    intervals
