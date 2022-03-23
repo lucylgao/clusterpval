@@ -51,7 +51,10 @@ the p-values are computed conditional on the fact that those clusters were estim
 This function approximates p-values via importance sampling. 
 
 This function assumes that \code{cl_fun} takes a \eqn{n \times p} numeric data matrix as input 
-and outputs integer assignments to clusters 1 through \code{K}.
+and outputs integer assignments to clusters 1 through \code{K}. 
+
+Thank you to August Guang for providing code to speed-up the function by 
+parallelizing via the \code{future} package.
 }
 \examples{
 # Simulates a 100 x 2 data set with three clusters
