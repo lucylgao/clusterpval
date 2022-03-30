@@ -1,7 +1,7 @@
 Package: clusterpval
 Type: Package
 Title: Clusterpval: P-Values for Differences in Means after Clustering
-Version: 1.0.0
+Version: 1.0.1
 Authors@R:
     person("Lucy", "Gao", email = "lucy.gao@uwaterloo.ca", role = c("aut", "cre"))
 Description: Clusters observations, then tests whether there  
@@ -16,4 +16,5 @@ Suggests:
 Imports: 
     fastcluster,
     stats,
-    intervals
+    intervals, 
+    future.apply

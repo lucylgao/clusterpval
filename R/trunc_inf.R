@@ -308,6 +308,9 @@ test_complete_hier_clusters_approx <- function(X, hcl, K, k1, k2, iso=TRUE, sig=
 #' 
 #' This function assumes that \code{cl_fun} takes a \eqn{n \times p} numeric data matrix as input 
 #' and outputs integer assignments to clusters 1 through \code{K}. 
+#' 
+#' Thank you to August Guang for providing code to speed-up the function by 
+#' parallelizing via the \code{future} package.
 #'
 #' @export
 #'
@@ -393,7 +396,6 @@ test_clusters_approx <- function(X, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL, ndr
   }
   
   scale_factor <- sqrt(scale_factor)
-  log_survives <- rep(NA, ndraws)
   phi <- stats::rnorm(ndraws)*scale_factor + stat
   
   
@@ -404,8 +406,8 @@ test_clusters_approx <- function(X, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL, ndr
   
   Xphi <- X
   
-  for(j in 1:ndraws) {
-    if(phi[j] < 0) next
+  log_survives <- unlist(future.apply::future_lapply(X = 1:ndraws, FUN = function(j) {
+    if(phi[j] < 0) return(NA)
     
     # Compute perturbed data set
     Xphi <- X
@@ -415,10 +417,14 @@ test_clusters_approx <- function(X, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL, ndr
     # Recluster the perturbed data set
     cl_Xphi <- cl_fun(Xphi)
     if(preserve_cl(cl, cl_Xphi, k1, k2)) {
-      log_survives[j] <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log(gamma(q/2)) - log(scale_factor) -
+      log_survives <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log(gamma(q/2)) - log(scale_factor) -
         stats::dnorm(phi[j], mean=stat, sd=scale_factor, log=TRUE)
+      return(log_survives)
     }
-  }
+    
+    return(NA)
+    
+  }, future.seed=TRUE))
   
   # Trim down to only survives
   phi <- phi[!is.na(log_survives)]
