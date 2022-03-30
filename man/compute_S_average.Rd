@@ -4,7 +4,7 @@
 \alias{compute_S_average}
 \title{Computes the conditioning set for average linkage hierarchical clustering}
 \usage{
-compute_S_average(X, hcl, K, k1, k2)
+compute_S_average(X, hcl, K, k1, k2, dist)
 }
 \arguments{
 \item{X}{the n x q data set}
@@ -16,6 +16,8 @@ compute_S_average(X, hcl, K, k1, k2)
 \item{k1}{the index of first cluster involved in the test}
 
 \item{k2}{the index of second cluster involved in the test}
+
+\item{dist}{The distances of matrix X}
 }
 \value{
 Returns an "Intervals" object containing the conditioning set.

@@ -32,7 +32,7 @@
 #' @param iso Boolean. If \code{TRUE}, isotropic covariance matrix model, otherwise not.
 #' @param sig Optional scalar specifying \eqn{\sigma}, relevant if \code{iso} is \code{TRUE}.
 #' @param SigInv Optional matrix specifying \eqn{\Sigma^{-1}}, relevant if \code{iso} is \code{FALSE}.
-#'
+#' @param dist The distances of matrix X
 #' @return
 #' \item{stat}{the test statistic: the Euclidean distance between the mean of cluster \code{k1} and the mean of cluster \code{k2}  }
 #' \item{pval}{the p-value}
@@ -62,7 +62,7 @@
 #' \code{\link{test_clusters_approx}} for approximate p-values for a user-specified clustering function;
 #' 
 #' @references Lucy L. Gao et al. "Selective inference for hierarchical clustering". 
-test_hier_clusters_exact <- function(X, link, hcl, K, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL) {
+test_hier_clusters_exact <- function(X, link, hcl, K, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL, dist=NULL) {
     # error checking 
     if(!is.matrix(X)) stop("X should be a matrix")
   
@@ -82,7 +82,9 @@ test_hier_clusters_exact <- function(X, link, hcl, K, k1, k2, iso=TRUE, sig=NULL
     n2 <- sum(hcl_at_K == k2)
     squared_norm_nu <- 1/n1 + 1/n2
     diff_means <- colMeans(X[hcl_at_K == k1, , drop=FALSE]) - colMeans(X[hcl_at_K == k2, , drop=FALSE])
-
+    
+    if(is.null(dist)) dist <- stats::dist(X)^2
+    
     if(iso) {
       if(is.null(sig)) {
         sig <- sqrt(sum(scale(X, scale=FALSE)^2)/(n*q - q))
@@ -92,12 +94,12 @@ test_hier_clusters_exact <- function(X, link, hcl, K, k1, k2, iso=TRUE, sig=NULL
       stat <- norm_vec(diff_means)
 
       # compute truncation set
-      if(link == "single") S <- compute_S_single(X, hcl, K, k1, k2)
-      if(link == "average") S <- compute_S_average(X, hcl, K, k1, k2)
-      if(link == "centroid") S <-  compute_S_centroid(X, hcl, K, k1, k2)
-      if(link == "ward.D") S <-  compute_S_ward(X, hcl, K, k1, k2)
-      if(link == "mcquitty") S <-  compute_S_mcquitty(X, hcl, K, k1, k2)
-      if(link == "median") S <-  compute_S_median(X, hcl, K, k1, k2)
+      if(link == "single") S <- compute_S_single(X, hcl, K, k1, k2, dist)
+      if(link == "average") S <- compute_S_average(X, hcl, K, k1, k2, dist)
+      if(link == "centroid") S <-  compute_S_centroid(X, hcl, K, k1, k2, dist)
+      if(link == "ward.D") S <-  compute_S_ward(X, hcl, K, k1, k2, dist)
+      if(link == "mcquitty") S <-  compute_S_mcquitty(X, hcl, K, k1, k2, dist)
+      if(link == "median") S <-  compute_S_median(X, hcl, K, k1, k2, dist)
 
       # set distribution of phi
       scale_factor <- squared_norm_nu*sig^2
@@ -113,11 +115,11 @@ test_hier_clusters_exact <- function(X, link, hcl, K, k1, k2, iso=TRUE, sig=NULL
 
       # compute truncation set
       if(link == "single") S <- compute_S_single_gencov(X, hcl, K, k1, k2, stat)
-      if(link == "average") S <- compute_S_average_gencov(X, hcl, K, k1, k2, stat)
-      if(link == "centroid") S <-  compute_S_centroid_gencov(X, hcl, K, k1, k2, stat)
-      if(link == "ward.D") S <-  compute_S_ward_gencov(X, hcl, K, k1, k2, stat)
-      if(link == "mcquitty") S <-  compute_S_mcquitty_gencov(X, hcl, K, k1, k2, stat)
-      if(link == "median") S <-  compute_S_median_gencov(X, hcl, K, k1, k2, stat)
+      if(link == "average") S <- compute_S_average_gencov(X, hcl, K, k1, k2, stat, dist)
+      if(link == "centroid") S <-  compute_S_centroid_gencov(X, hcl, K, k1, k2, stat, dist)
+      if(link == "ward.D") S <-  compute_S_ward_gencov(X, hcl, K, k1, k2, stat, dist)
+      if(link == "mcquitty") S <-  compute_S_mcquitty_gencov(X, hcl, K, k1, k2, stat, dist)
+      if(link == "median") S <-  compute_S_median_gencov(X, hcl, K, k1, k2, stat, dist)
 
       # set distribution of phi
       scale_factor <- squared_norm_nu
