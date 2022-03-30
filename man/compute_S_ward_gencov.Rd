@@ -5,7 +5,7 @@
 \title{Computes the conditioning set S for ward linkage hierarchical clustering,
 w/o assuming isotropic covariance matrix}
 \usage{
-compute_S_ward_gencov(X, hcl, K, k1, k2, stat)
+compute_S_ward_gencov(X, hcl, K, k1, k2, stat, dist)
 }
 \arguments{
 \item{X}{the n x q data set}
@@ -19,6 +19,8 @@ compute_S_ward_gencov(X, hcl, K, k1, k2, stat)
 \item{k2}{the index of second cluster involved in the test}
 
 \item{stat}{the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}}
+
+\item{dist}{The distances of matrix X}
 }
 \value{
 Returns an "Intervals" object containing the conditioning set.

@@ -13,7 +13,8 @@ test_hier_clusters_exact(
   k2,
   iso = TRUE,
   sig = NULL,
-  SigInv = NULL
+  SigInv = NULL,
+  dist = NULL
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ test_hier_clusters_exact(
 \item{sig}{Optional scalar specifying \eqn{\sigma}, relevant if \code{iso} is \code{TRUE}.}
 
 \item{SigInv}{Optional matrix specifying \eqn{\Sigma^{-1}}, relevant if \code{iso} is \code{FALSE}.}
+
+\item{dist}{The distances of matrix X}
 }
 \value{
 \item{stat}{the test statistic: the Euclidean distance between the mean of cluster \code{k1} and the mean of cluster \code{k2}  }

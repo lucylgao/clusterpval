@@ -102,11 +102,12 @@ solve_one_ineq <- function(A, B, C, tol=1e-10) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_single <- function(X, hcl, K, k1, k2) {
+compute_S_single <- function(X, hcl, K, k1, k2, dist) {
   # Initialization and book-keeping 
   n <- nrow(X)
   h <- hcl$height[n-K] 
@@ -189,11 +190,12 @@ compute_S_single <- function(X, hcl, K, k1, k2) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_average <- function(X, hcl, K, k1, k2) {
+compute_S_average <- function(X, hcl, K, k1, k2, dist) {
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -221,7 +223,7 @@ compute_S_average <- function(X, hcl, K, k1, k2) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -575,11 +577,12 @@ compute_S_average <- function(X, hcl, K, k1, k2) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_centroid <- function(X, hcl, K, k1, k2) {
+compute_S_centroid <- function(X, hcl, K, k1, k2, dist) {
   n <- nrow(X)
   heights <- hcl$height 
   merges <- hcl$merge
@@ -610,7 +613,7 @@ compute_S_centroid <- function(X, hcl, K, k1, k2) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -1062,11 +1065,12 @@ compute_S_centroid <- function(X, hcl, K, k1, k2) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_ward <- function(X, hcl, K, k1, k2) { 
+compute_S_ward <- function(X, hcl, K, k1, k2, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -1095,7 +1099,7 @@ compute_S_ward <- function(X, hcl, K, k1, k2) {
   A <- matrix(NA, nrow(X), nrow(X))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -1457,11 +1461,12 @@ compute_S_ward <- function(X, hcl, K, k1, k2) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_mcquitty <- function(X, hcl, K, k1, k2) {
+compute_S_mcquitty <- function(X, hcl, K, k1, k2, dist) {
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -1489,7 +1494,7 @@ compute_S_mcquitty <- function(X, hcl, K, k1, k2) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -1840,11 +1845,12 @@ compute_S_mcquitty <- function(X, hcl, K, k1, k2) {
 #' @param K number of clusters
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_median <- function(X, hcl, K, k1, k2) {
+compute_S_median <- function(X, hcl, K, k1, k2, dist) {
   n <- nrow(X)
   heights <- hcl$height 
   merges <- hcl$merge
@@ -1875,7 +1881,7 @@ compute_S_median <- function(X, hcl, K, k1, k2) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -2425,11 +2431,12 @@ compute_S_single_gencov <- function(X, hcl, K, k1, k2, stat) {
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
 #' @param stat the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_average_gencov <- function(X, hcl, K, k1, k2, stat) { 
+compute_S_average_gencov <- function(X, hcl, K, k1, k2, stat, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -2457,7 +2464,7 @@ compute_S_average_gencov <- function(X, hcl, K, k1, k2, stat) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -2818,11 +2825,12 @@ compute_S_average_gencov <- function(X, hcl, K, k1, k2, stat) {
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
 #' @param stat the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_centroid_gencov <- function(X, hcl, K, k1, k2, stat) { 
+compute_S_centroid_gencov <- function(X, hcl, K, k1, k2, stat, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -2850,7 +2858,7 @@ compute_S_centroid_gencov <- function(X, hcl, K, k1, k2, stat) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -3201,11 +3209,12 @@ compute_S_centroid_gencov <- function(X, hcl, K, k1, k2, stat) {
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
 #' @param stat the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_ward_gencov <- function(X, hcl, K, k1, k2, stat) { 
+compute_S_ward_gencov <- function(X, hcl, K, k1, k2, stat, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -3234,7 +3243,7 @@ compute_S_ward_gencov <- function(X, hcl, K, k1, k2, stat) {
   A <- matrix(NA, nrow(X), nrow(X))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -3602,11 +3611,12 @@ compute_S_ward_gencov <- function(X, hcl, K, k1, k2, stat) {
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
 #' @param stat the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_mcquitty_gencov <- function(X, hcl, K, k1, k2, stat) { 
+compute_S_mcquitty_gencov <- function(X, hcl, K, k1, k2, stat, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -3634,7 +3644,7 @@ compute_S_mcquitty_gencov <- function(X, hcl, K, k1, k2, stat) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
@@ -3994,11 +4004,12 @@ compute_S_mcquitty_gencov <- function(X, hcl, K, k1, k2, stat) {
 #' @param k1 the index of first cluster involved in the test
 #' @param k2 the index of second cluster involved in the test
 #' @param stat the test statistic, \eqn{||\Sigma^{-1/2} x^T \nu||_2}
+#' @param dist The distances of matrix X
 #'
 #' @keywords internal
 #'
 #' @return Returns an "Intervals" object containing the conditioning set.
-compute_S_median_gencov <- function(X, hcl, K, k1, k2, stat) { 
+compute_S_median_gencov <- function(X, hcl, K, k1, k2, stat, dist) { 
   # Initialization and book-keeping 
   n <- nrow(X)
   heights <- hcl$height 
@@ -4026,7 +4037,7 @@ compute_S_median_gencov <- function(X, hcl, K, k1, k2, stat) {
   # Make the coefficients for d(i, i'; x'(\phi))
   B <- matrix(NA, nrow(X), nrow(X))
   C <- matrix(NA, nrow(X), nrow(X))
-  C[lower.tri(C)] <- stats::dist(X)^2
+  C[lower.tri(C)] <- dist
   
   # compute quantities used in all coefficients
   prop_k2 <- length(k2_obs)/(length(k1_obs) + length(k2_obs))
