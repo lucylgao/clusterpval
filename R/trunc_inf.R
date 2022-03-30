@@ -11,15 +11,21 @@
 #' the p-values are computed conditional on the fact that those clusters were estimated. 
 #' This function computes p-values exactly via an analytic characterization of the conditioning set. 
 #' 
-#' Currently, this function supports squared Euclidean distance as a measure of dissimilarity 
+#' Currently, this function supports SQUARED Euclidean distance as a measure of dissimilarity 
 #' between observations, and the following six linkages: single, average, centroid, Ward, 
-#' McQuitty (also known as WPGMA), and median (also kown as WPGMC). 
+#' McQuitty (also known as WPGMA), and median (also knßown as WPGMC). 
 #' 
 #' By default, this function assumes that the covariance matrix of the features is isotropic 
 #' i.e. \eqn{Cov(X_i) = \sigma^2 I_p}. Setting \code{iso} to \code{FALSE} instead assumes that 
 #' \eqn{Cov(X_i) = \Sigma}. If known, \eqn{\sigma} can be passed in using the \code{sigma} argument 
 #' or \eqn{\Sigma^{-1}} can be passed in the \code{SigInv} argument; otherwise, an 
 #' estimate of \eqn{\sigma} or \eqn{\Sigma} will be used. 
+#' 
+#' Note that passing in the SQUARED Euclidean distance object used by \code{hclust} in using the
+#' optional \code{dist} argument improves computational efficiency for all linkages except 
+#' for single linkage. This may not lead to noticeable speed-ups in small data sets but 
+#' leads to major speed-ups in large data sets. Thank you to Jesko Wagner for 
+#' suggesting and implementing this change. 
 #'
 #' @export
 #'
@@ -32,7 +38,7 @@
 #' @param iso Boolean. If \code{TRUE}, isotropic covariance matrix model, otherwise not.
 #' @param sig Optional scalar specifying \eqn{\sigma}, relevant if \code{iso} is \code{TRUE}.
 #' @param SigInv Optional matrix specifying \eqn{\Sigma^{-1}}, relevant if \code{iso} is \code{FALSE}.
-#' @param dist The distances of matrix X
+#' @param dist The SQUARED Euclidean distances of matrix X
 #' @return
 #' \item{stat}{the test statistic: the Euclidean distance between the mean of cluster \code{k1} and the mean of cluster \code{k2}  }
 #' \item{pval}{the p-value}
