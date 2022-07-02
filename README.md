@@ -11,7 +11,7 @@ Make sure that ``devtools`` is installed by running ``install.packages("devtools
 devtools::install_github("lucylgao/clusterpval")
 ```
 
-## Forking to try to prevent float overflow
+## Forking to try to prevent float overflow in test_complete_hier_clusters_approx and test_clusters_approx
 ```R
 > i = 1
 > while (gamma(i/2) != Inf) {i = i + 1}
