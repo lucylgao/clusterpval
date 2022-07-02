@@ -56,3 +56,85 @@ preserve_cl <- function(cl, cl_phi, k1, k2) {
   k1_in & k2_in
 }
 
+#' Calculates log(gamma(q/2)) without overflowing float regardless of size of q
+#'
+#' @keywords internal
+#' 
+#' @param q number of cols of dataframe
+#' 
+#' @return Returns log(gamma(q/2))
+calculate_log_gamma_q_over_2 <- function(q){
+  if (gamma(q/2) != Inf){
+    return(log(gamma(q/2)))
+  }
+  if (q%%2 == 0){
+    return(calculate_log_gamma_q_even(q))
+  }
+  if (q%%2 == 1){
+    return(calculate_log_gamma_q_odd(q))
+  }
+}
+
+#' Calculates log(gamma(q/2)) if q > 343 (if gamma(q/2) overflows a float) and 
+#' q even.
+#' Takes advantage of log rules (log(a*b) = log(a) + log(b)) and fact 
+#' that q will be positive integer.
+#' Even function calculates log(gamma(q)) by summing values of log(x) 
+#' for(x in 1:((q/2)-1)) 
+#' (because q/2 will be integer and gamma(integer) = (integer-1)!)
+#' 
+#' @keywords internal
+#' 
+#' @param q number of cols of dataframe (must be even)
+#' 
+#' @return Returns log(gamma(q/2))
+calculate_log_gamma_q_even <- function(q){
+  if (q%%2 != 0){
+    stop("calculate_log_gamma_q_even can only take even values of q")
+  }
+  n = (q/2)
+  # calculate log(n-1!)
+  n_minus_one_factorial_nums_to_sum = c()
+  for(x in 1:(n-1)){
+    n_minus_one_factorial_nums_to_sum = c(n_minus_one_factorial_nums_to_sum, log(x))
+  }
+  log_n_minus_one_factorial = sum(n_minus_one_factorial_nums_to_sum)
+  return(log_n_minus_one_factorial)
+}
+
+#' Calculates log(gamma(q/2)) if q > 343 (if gamma(q/2) overflows a float) and 
+#' q odd
+#' Takes advantage of log rules (log(a*b) = log(a) + log(b)), 
+#' (log(a/b) = log(a) - log(b)), and fact that q will be positive integer.
+#' 
+#' @keywords internal
+#' 
+#' @param q number of cols of dataframe (must be odd)
+#' 
+#' @return Returns log(gamma(q/2))
+calculate_log_gamma_q_odd <- function(q){
+  if (q%%2 != 1){
+    stop("calculate_log_gamma_q_odd can only take odd values of q")
+  }
+  n = ((q/2) - .5)
+  # calculate log((2n)! * sqrt(pi)), or equivalently log(2n!) + log(sqrt(pi))
+  two_n_factorial_nums_to_sum = c()
+  for(x in 1:(2*n)){
+    two_n_factorial_nums_to_sum = c(two_n_factorial_nums_to_sum, log(x))
+  }
+  log_two_n_factorial = sum(two_n_factorial_nums_to_sum)
+  log_two_n_factorial_plus_log_sqrt_pi = log_two_n_factorial + log(sqrt(pi))
+  
+  # calculate log((4^n) * n!), or equivalently log(4^n) + log(n!)
+  log_four_to_power_of_n = log(4) * n
+  n_factorial_nums_to_sum = c()
+  for(x in 1:n){
+    n_factorial_nums_to_sum = c(n_factorial_nums_to_sum, log(x))
+  }
+  log_n_factorial = sum(n_factorial_nums_to_sum)
+  log_four_to_power_of_n_plus_log_n_factorial = log_four_to_power_of_n + log_n_factorial
+  
+  # subtract first term (numerator) from second term (denominator)
+  return(log_two_n_factorial_plus_log_sqrt_pi-log_four_to_power_of_n_plus_log_n_factorial)
+}
+  

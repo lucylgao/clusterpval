@@ -275,7 +275,8 @@ test_complete_hier_clusters_approx <- function(X, hcl, K, k1, k2, iso=TRUE, sig=
     hcl_Xphi <- fastcluster::hclust(stats::dist(Xphi)^2, method="complete")
     clusters_Xphi <- stats::cutree(hcl_Xphi, K)
     if(same_cl(hcl_at_K, clusters_Xphi, K)) {
-      log_survives[j] <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log(gamma(q/2)) - log(scale_factor) -
+      log_gamma_q_over_2 = calculate_log_gamma_q_over_2(q)
+      log_survives[j] <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log_gamma_q_over_2 - log(scale_factor) -
         stats::dnorm(phi[j], mean=stat, sd=scale_factor, log=TRUE)
     }
   }
@@ -423,7 +424,8 @@ test_clusters_approx <- function(X, k1, k2, iso=TRUE, sig=NULL, SigInv=NULL, ndr
     # Recluster the perturbed data set
     cl_Xphi <- cl_fun(Xphi)
     if(preserve_cl(cl, cl_Xphi, k1, k2)) {
-      log_survives <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log(gamma(q/2)) - log(scale_factor) -
+      log_gamma_q_over_2 = calculate_log_gamma_q_over_2(q)
+      log_survives <- -(phi[j]/scale_factor)^2/2 + (q-1)*log(phi[j]/scale_factor) - (q/2 - 1)*log(2) - log_gamma_q_over_2 - log(scale_factor) -
         stats::dnorm(phi[j], mean=stat, sd=scale_factor, log=TRUE)
       return(log_survives)
     }
