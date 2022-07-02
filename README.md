@@ -10,13 +10,3 @@ Make sure that ``devtools`` is installed by running ``install.packages("devtools
 ```R
 devtools::install_github("lucylgao/clusterpval")
 ```
-
-## Forking to try to prevent float overflow in test_complete_hier_clusters_approx and test_clusters_approx
-```R
-> i = 1
-> while (gamma(i/2) != Inf) {i = i + 1}
-> i
-[1] 344
-```
-
-Any dataset with more than 343 cols will have a log_survives of -Infinity for every perturbed dataset, and NaN values for pval and stderr. I propose writing a function that does the log and the gamma at the same time to avoid overflowing a float.
