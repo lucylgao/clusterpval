@@ -26,4 +26,3 @@ Bryc, Wlodzimierz. "A uniform approximation to the right normal tail integral."
 Canal, Luisa. "A normal approximation for the chi-square distribution."
     Computational statistics & data analysis 48.4 (2005): 803-808.
 }
-\keyword{internal}
