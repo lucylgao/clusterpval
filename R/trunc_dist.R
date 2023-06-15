@@ -268,7 +268,7 @@ TNSurv <- function(q, mean, sd, E, approx = FALSE) {
 #' This function returns an approximation of \eqn{P(X \in E1)/P(X \in E2)}, where
 #'     \eqn{X} is a central chi-squared random variable with \code{df} degrees of freedom.
 #'
-#' @keywords internal
+#' @export
 #'
 #' @param df degree of freedom of the chi-squared random variable.
 #' @param E1,E2 "Intervals" objects or matrices where rows represents
